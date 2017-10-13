@@ -203,7 +203,7 @@ int main() {
     glUseProgram(shader_program);
 
     // Set a time uniform (which units?)
-    glUniform1f(t_loc, (float) clock() / (float) CLOCKS_PER_SEC);
+    glUniform1f(t_loc, (float)time(NULL));
 
     glClear(GL_COLOR_BUFFER_BIT);
 
