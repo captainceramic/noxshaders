@@ -8,7 +8,7 @@ float colval;
 
 void main() {
 
-  colval = 0.5 + (0.5 * sin(u_time));
+  colval = 0.5 + (0.5 * sin(0.01 * u_time));
 
   gl_FragColor = vec4(0.0, 0.5, colval, 1.0);
 }
