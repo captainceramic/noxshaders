@@ -150,7 +150,6 @@ int main() {
 
   /* Zero out the initial state of the application */
   memset(state, 0, sizeof(*state));
-
   init_ogl(state);
 
   /* Set up the object to draw! */
@@ -177,13 +176,15 @@ int main() {
   /* Load up our shaders */
   GLuint shader_program = load_shaders("./shaders/shader.vert",
 				       "./shaders/shader.frag");
-  GLuint t_loc = glGetUniformLocation(shader_program, "u_time");
 
   printf("Our shader program id is: %d\n", shader_program);
 
+  GLuint t_loc = glGetUniformLocation(shader_program, "u_time");
+  GLuint r_loc = glGetUniformLocation(shader_program, "u_resolution");
+
   printf("Screen width and height is: %d x %d\n",
 	 state->screen_width, state->screen_height);
-  
+
   glViewport(0, 0, state->screen_width, state->screen_height);
   
   /* Now we see if we can draw something! */
@@ -202,8 +203,13 @@ int main() {
     
     glUseProgram(shader_program);
 
-    // Set a time uniform (which units?)
-    glUniform1f(t_loc, (float)full_frames);
+    // Set the time uniform. (assume 60 FPS)
+    glUniform1f(t_loc, (float)full_frames / 60.0);
+
+    // Set the resolution uniform.
+    glUniform2f(r_loc,
+		(float)state->screen_width,
+		(float)state->screen_height);
 
     glClear(GL_COLOR_BUFFER_BIT);
 
