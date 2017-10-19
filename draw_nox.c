@@ -1,3 +1,4 @@
+
 /* This is my attempt to set up an EGL context using the hardware
    accelerated OpenGLES 2.0 driver on the raspberry pi */
 #include <stdio.h>
@@ -12,6 +13,8 @@
 #include "bcm_host.h"
 
 #include "shader_loader.h"
+
+const bool scale_down = true;
 
 /* Struct to hold all the global state objects */
 typedef struct {
@@ -31,7 +34,6 @@ typedef struct {
    a pointer to the start of it. Why can't we
    do this all in one? */
 static APP_STATE_T _state, *state = &_state;
-
 
 static void init_ogl(APP_STATE_T *t) {
   /* Get OpenGLES ticking over. */
@@ -54,7 +56,7 @@ static void init_ogl(APP_STATE_T *t) {
     EGL_NONE
   };
 
-  static const EGLint context_attributes[] = 
+  static const EGLint context_attributes[] =
    {
       EGL_CONTEXT_CLIENT_VERSION, 2,
       EGL_NONE
@@ -92,6 +94,12 @@ static void init_ogl(APP_STATE_T *t) {
   success = graphics_get_display_size(0, &state->screen_width, &state->screen_height);
   assert(success >= 0);
 
+  /* Scale down the size for performace. */
+  if (scale_down) {
+    state->screen_width = 800;
+    state->screen_height = 800;
+  }
+
   /* Keep creating the window surface */
   dst_rect.x = 0;
   dst_rect.y = 0;
@@ -112,11 +120,11 @@ static void init_ogl(APP_STATE_T *t) {
 						   0, &src_rect,
 						   DISPMANX_PROTECTION_NONE,
 						   0, 0, 0);
-  
+
   nativewindow.element = state->dispman_element;
   nativewindow.width = state->screen_width;
   nativewindow.height = state->screen_height;
-  
+
   vc_dispmanx_update_submit_sync(dispman_update);
 
   state->surface = eglCreateWindowSurface(state->display, config,
@@ -132,18 +140,18 @@ static void init_ogl(APP_STATE_T *t) {
   if (EGL_SUCCESS != eglGetError()) {
     printf("egl error!");
   }
-  
+
   /* Check the renderer information */
   printf("vendor: %s\n", glGetString(GL_VENDOR));
   printf("version: %s\n", glGetString(GL_VERSION));
   printf("renderer: %s\n", glGetString(GL_RENDERER));
   printf("shading language version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-  
+
 }
 
 
 int main() {
-  
+
   /* Set up the broadcom stuff */
   bcm_host_init();
   printf("initialised broadcom driver...\n");
@@ -186,7 +194,7 @@ int main() {
 	 state->screen_width, state->screen_height);
 
   glViewport(0, 0, state->screen_width, state->screen_height);
-  
+
   /* Now we see if we can draw something! */
   int frames = 0;
   int timeDiff;
@@ -197,10 +205,11 @@ int main() {
   bool should_exit = false;
   startTime = time(NULL);
 
-  int max_frames = 20 * 60;
+  // This sets how long the shader will run.
+  int max_frames = 60 * 60;
   int full_frames = 0;
   while(false == should_exit) {
-    
+
     glUseProgram(shader_program);
 
     // Set the time uniform. (assume 60 FPS)
@@ -214,7 +223,7 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
-    
+
     eglSwapBuffers(state->display, state->surface);
 
     if (full_frames > max_frames) {
@@ -233,9 +242,9 @@ int main() {
     }
 
   }
-  
+
   glDeleteBuffers(1, &VBO);
-  
+
   return 0;
-  
+
 }
