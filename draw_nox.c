@@ -1,4 +1,3 @@
-
 /* This is my attempt to set up an EGL context using the hardware
    accelerated OpenGLES 2.0 driver on the raspberry pi */
 #include <stdio.h>
@@ -13,6 +12,12 @@
 #include "bcm_host.h"
 
 #include "shader_loader.h"
+
+
+#define SCREEN_X 800
+#define SCREEN_Y 800
+
+
 
 const bool scale_down = true;
 
@@ -96,8 +101,8 @@ static void init_ogl(APP_STATE_T *t) {
 
   /* Scale down the size for performace. */
   if (scale_down) {
-    state->screen_width = 800;
-    state->screen_height = 800;
+    state->screen_width = SCREEN_X;
+    state->screen_height = SCREEN_Y;
   }
 
   /* Keep creating the window surface */
