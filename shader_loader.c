@@ -25,8 +25,8 @@ GLuint load_shaders(const char *vertex_shader_path,
   rewind(vertex_file);
   rewind(fragment_file);
 
-  char * const vertex_shader_source = malloc(vertex_fsize + 1);
-  char * const fragment_shader_source = malloc(fragment_fsize + 1);
+  char * vertex_shader_source = malloc(vertex_fsize + 1);
+  char * fragment_shader_source = malloc(fragment_fsize + 1);
 
   fread(vertex_shader_source, vertex_fsize, 1, vertex_file);
   fread(fragment_shader_source, fragment_fsize, 1, fragment_file);
@@ -37,12 +37,9 @@ GLuint load_shaders(const char *vertex_shader_path,
   vertex_shader_source[vertex_fsize] = 0;
   fragment_shader_source[fragment_fsize] = 0;
   
-  const GLchar const * final_vertex_shader_source = vertex_shader_source;
-  const GLchar const * final_fragment_shader_source = fragment_shader_source;
+  const GLchar * final_vertex_shader_source = vertex_shader_source;
+  const GLchar * final_fragment_shader_source = fragment_shader_source;
 
-  free(vertex_shader_source);
-  free(fragment_shader_source);
-  
   /* start compiling shaders */
   enum Consts {INFOLOG_LEN = 512};
   GLchar infoLog[INFOLOG_LEN];
@@ -61,7 +58,7 @@ GLuint load_shaders(const char *vertex_shader_path,
   if (!success) {
     printf("ERROR: Vertex Shader compilation failed:\n%s\n", infoLog);
   } else {
-    printf("Vertex Shader sources is:\n%s\n", final_vertex_shader_source);
+    printf("Vertex shader source is:\n%s\n", final_vertex_shader_source);
   }
 
   /* fragment shader */
@@ -74,7 +71,7 @@ GLuint load_shaders(const char *vertex_shader_path,
   if (!success) {
     printf("ERROR: Fragment Shader compilation failed:\n%s\n", infoLog);
   } else {
-    printf("Fragment Shader source is:\n%s\n", final_fragment_shader_source);
+    printf("Fragment shader source is:\n%s\n", final_fragment_shader_source);
   }
 
   /* link the shaders */
@@ -92,9 +89,13 @@ GLuint load_shaders(const char *vertex_shader_path,
     printf("ERROR: Shader Program failed to link:\n%s\n", infoLog);
   } 
 
+  /* Clean up and delete */
   glDeleteShader(vertex_shader);
   glDeleteShader(fragment_shader);
 
+  free(vertex_shader_source);
+  free(fragment_shader_source);
+  
   return shader_program;
   
 }
