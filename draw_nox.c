@@ -17,8 +17,6 @@
 #define SCREEN_X 800
 #define SCREEN_Y 800
 
-
-
 const bool scale_down = true;
 
 /* Struct to hold all the global state objects */
@@ -36,8 +34,8 @@ typedef struct {
 
 /* I don't quite understand this...
    create a new struct, then create
-   a pointer to the start of it. Why can't we
-   do this all in one? */
+   a pointer to the start of it.
+   Why can't we do this all in one? */
 static APP_STATE_T _state, *state = &_state;
 
 static void init_ogl(APP_STATE_T *t) {
@@ -213,9 +211,11 @@ int main() {
   // This sets how long the shader will run.
   int max_frames = 60 * 60;
   int full_frames = 0;
-  while(false == should_exit) {
 
-    glUseProgram(shader_program);
+  // Use the shader program.
+  glUseProgram(shader_program);
+
+  while(false == should_exit) {
 
     // Set the time uniform. (assume 60 FPS)
     glUniform1f(t_loc, (float)full_frames / 60.0);

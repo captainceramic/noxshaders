@@ -1,4 +1,4 @@
-CC = gcc -Wall -std=gnu11
+CC = gcc -Wall -std=gnu11 -O3
 CFLAGS = -I/opt/vc/include/
 LDFLAGS = -L/opt/vc/lib/ -lbcm_host -lbrcmEGL -lbrcmGLESv2 -lpthread -lrt
 
