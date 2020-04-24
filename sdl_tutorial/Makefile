@@ -1,6 +1,6 @@
 CXX = g++
-CXXFLAGS = -Wall -std=c++17
-LDFLAGS = -lSDL2 -lGLEW -lGL
+CXXFLAGS = -Wall -std=c++17 `sdl2-config --cflags`
+LDFLAGS = `sdl2-config --libs` -lGLEW -lGL
 
 run_shader: run_shader.o
 	$(CXX) $(LDFLAGS) -o run_shader run_shader.o
