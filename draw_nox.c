@@ -209,7 +209,8 @@ int main() {
   startTime = time(NULL);
 
   // This sets how long the shader will run.
-  int max_frames = 60 * 60;
+  // 60fps, by a number of seconds.
+  int max_frames = 60 * 240;
   int full_frames = 0;
 
   // Use the shader program.

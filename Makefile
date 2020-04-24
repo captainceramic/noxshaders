@@ -12,6 +12,7 @@ shader_loader.o: shader_loader.c
 	$(CC) $(CFLAGS) -o shader_loader.o -c shader_loader.c
 
 .PHONY: clean test
+all: draw_nox
 
 clean:
 	rm -f draw_nox *.o *~
