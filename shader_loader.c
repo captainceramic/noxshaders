@@ -10,8 +10,7 @@
 
 GLuint load_shaders(const char *vertex_shader_path,
 		    const char *fragment_shader_path) {
-
-  
+ 
   /* load the vertex shader and fragment shader code */
   FILE *vertex_file = fopen(vertex_shader_path, "rb");
   FILE *fragment_file = fopen(fragment_shader_path, "rb");

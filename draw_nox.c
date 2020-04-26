@@ -17,7 +17,11 @@
 #define SCREEN_X 800
 #define SCREEN_Y 800
 
-const bool scale_down = true;
+/* Set some parameters if necessary */
+const bool scale_down = false;
+const char* vert_shader_name = "./shaders/shader.vert";
+const char* frag_shader_name = "./shaders/shader2.frag";
+const int num_seconds = 40;
 
 /* Struct to hold all the global state objects */
 typedef struct {
@@ -39,7 +43,7 @@ typedef struct {
 static APP_STATE_T _state, *state = &_state;
 
 static void init_ogl(APP_STATE_T *t) {
-  /* Get OpenGLES ticking over. */
+  /* Function to get an OpenGLES context ticking over. */
   int32_t success = 0;
   EGLBoolean result;
   EGLint num_config;
@@ -78,7 +82,6 @@ static void init_ogl(APP_STATE_T *t) {
   assert(result != EGL_FALSE);
   printf("EGL version - major: %d, minor: %d\n", major, minor);
 
-
   // Choose an appropriate EGL framebuffer configuration.
   result = eglChooseConfig(state->display, attribute_list,
 			   &config, 1, &num_config);
@@ -97,7 +100,7 @@ static void init_ogl(APP_STATE_T *t) {
   success = graphics_get_display_size(0, &state->screen_width, &state->screen_height);
   assert(success >= 0);
 
-  /* Scale down the size for performace. */
+  /* Scale down the size for performance. */
   if (scale_down) {
     state->screen_width = SCREEN_X;
     state->screen_height = SCREEN_Y;
@@ -152,7 +155,6 @@ static void init_ogl(APP_STATE_T *t) {
 
 }
 
-
 int main() {
 
   /* Set up the broadcom stuff */
@@ -163,7 +165,7 @@ int main() {
   memset(state, 0, sizeof(*state));
   init_ogl(state);
 
-  /* Set up the object to draw! */
+  /* Set up the object to draw! (just a big rectangle / two triangles) */
   GLfloat vertices[] = {
     -1.0f, -1.0f, 0.0f,
     -1.0f, 1.0f, 0.0f,
@@ -185,8 +187,7 @@ int main() {
   glEnableVertexAttribArray(0);
 
   /* Load up our shaders */
-  GLuint shader_program = load_shaders("./shaders/shader.vert",
-				       "./shaders/shader.frag");
+  GLuint shader_program = load_shaders(vert_shader_name, frag_shader_name);
 
   printf("Our shader program id is: %d\n", shader_program);
 
@@ -208,9 +209,9 @@ int main() {
   bool should_exit = false;
   startTime = time(NULL);
 
-  // This sets how long the shader will run.
+  // This sets how long (approx) the shader will run.
   // 60fps, by a number of seconds.
-  int max_frames = 60 * 240;
+  int max_frames = 60 * num_seconds;
   int full_frames = 0;
 
   // Use the shader program.
