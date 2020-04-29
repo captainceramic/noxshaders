@@ -9,11 +9,16 @@ uniform float u_time;
 
 const vec2 seed_vector = vec2( 15.262, 482.1 );
 
-
 /* function to make a pseudorandom uniform (0, 1) from a 2D position vector
    and a given floating point time value */
 float random (vec2 st, float time_point) {
-  return fract( time_point * 1000.0 * sin( dot( st.xy, seed_vector ) ) );
+  
+  float seed_dot = dot( st.xy, seed_vector );
+
+  // sin of the dot product (radians)
+  float sin_val = sin( seed_dot );
+   
+  return fract( 10000.0 * time_point * sin( seed_dot ) );
 }
 
 
