@@ -18,9 +18,9 @@
 #define SCREEN_Y 800
 
 /* Set some parameters if necessary */
-const bool scale_down = false;
+const bool scale_down = true;
 const char* vert_shader_name = "./shaders/shader.vert";
-const char* frag_shader_name = "./shaders/shader2.frag";
+const char* frag_shader_name = "./shaders/shader.frag";
 const int num_seconds = 40;
 
 /* Struct to hold all the global state objects */
@@ -217,15 +217,16 @@ int main() {
   // Use the shader program.
   glUseProgram(shader_program);
 
+  // Set the resolution uniform.
+  // This can't change in the render loop.
+  glUniform2f(r_loc,
+	      (float)state->screen_width,
+	      (float)state->screen_height);
+  
   while(false == should_exit) {
 
     // Set the time uniform. (assume 60 FPS)
     glUniform1f(t_loc, (float)full_frames / 60.0);
-
-    // Set the resolution uniform.
-    glUniform2f(r_loc,
-		(float)state->screen_width,
-		(float)state->screen_height);
 
     glClear(GL_COLOR_BUFFER_BIT);
 
