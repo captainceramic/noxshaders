@@ -7,7 +7,7 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 
-const std::string programName = "SDL OpenGL Shaders";
+const std::string programName = "SDL OpenGLES Shaders";
 
 const int sizeX = 512;
 const int sizeY = 512;
@@ -35,17 +35,17 @@ int main( int argc, char* args[] ) {
     return EXIT_FAILURE;
   }
 
-  // Start setting up some OpenGL stuff
+  // Start setting up some OpenGLES stuff
   mainContext = SDL_GL_CreateContext( window );
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
   SDL_GL_SetSwapInterval(1);
   glewInit();
 
   // Do something
-  glClearColor(0.5, 0.2, 0.0, 1.0);
+  glClearColor(0.2, 0.6, 0.2, 1.0);
   glClear( GL_COLOR_BUFFER_BIT );
   SDL_GL_SwapWindow( window );
   SDL_Delay( 6000 );
