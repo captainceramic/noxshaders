@@ -9,13 +9,17 @@
 
 const std::string programName = "SDL OpenGLES Shaders";
 
+/* Set some parameters if necessary */
+const bool scale_down = true;
+const int num_seconds = 40;
+
 const int sizeX = 1024;
 const int sizeY = 768;
 
+/* Globals for the window and context */
 SDL_Window* window;
 SDL_GLContext mainContext;
   
-
 int main( int argc, char* args[] ) {
   
   // Start up SDL video
@@ -43,13 +47,76 @@ int main( int argc, char* args[] ) {
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
   SDL_GL_SetSwapInterval(1);
 
-  // Do something
-  glClearColor(0.2, 0.6, 0.2, 1.0);
-  glClear( GL_COLOR_BUFFER_BIT );
-  SDL_GL_SwapWindow( window );
-  SDL_Delay( 6000 );
+  std::cout << "vendor: " << glGetString(GL_VENDOR) << std::endl;
+  std::cout << "version: " <<  glGetString(GL_VERSION) << std::endl;
+  std::cout << "renderer: " << glGetString(GL_RENDERER) << std::endl;
+  std::cout << "shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
+  /* Set up the object to draw! (just a big rectangle / two triangles) */
+  GLfloat vertices[] = {
+    -1.0f, -1.0f, 0.0f,
+    -1.0f, 1.0f, 0.0f,
+    1.0f, 1.0f, 0.0f,
+    1.0f, 1.0f, 0.0f,
+    1.0f, -1.0f, 0.0f,
+    -1.0f, -1.0f, 0.0f};
+
+  GLuint VBO;
+  glGenBuffers(1, &VBO);
+
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices),
+   	       vertices, GL_STATIC_DRAW);
+
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+   			3 * sizeof(GLfloat), (void*)0);
+
+  glEnableVertexAttribArray(0);
+
+  /* Now we see if we can draw something! */
+  int frames = 0;
+  int timeDiff;
+  time_t startTime, endTime;
+
+  bool should_exit = false;
+  startTime = time(NULL);
+
+  // This sets how long (approx) the shader will run.
+  // 60fps, by a number of seconds.
+  int max_frames = 60 * num_seconds;
+  int full_frames = 0;
+
+  while(false == should_exit) {
+
+    float frac = (float) full_frames / (float) max_frames;
+    
+    glClearColor(frac, 1.0f - frac, frac, 1.0f - frac);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    SDL_GL_SwapWindow(window);
+      
+    if (full_frames > max_frames) {
+      should_exit = true;
+    }
+    full_frames++;
+
+    /* Handle FPS */
+    frames += 1;
+    endTime = time(NULL);
+    timeDiff = (int)(endTime - startTime);
+    if(timeDiff >= 3) {
+      printf("Current FPS is: %0.3f\n", (float) frames / (float) timeDiff);
+      startTime = time(NULL);
+      frames = 0;
+    }
+
+  }
+
+  glDeleteBuffers(1, &VBO);
+ 
   // Cleanup
+  glDeleteBuffers(1, &VBO);
   SDL_GL_DeleteContext( mainContext );
   SDL_DestroyWindow( window );
   SDL_Quit();
