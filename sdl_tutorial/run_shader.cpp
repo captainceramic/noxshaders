@@ -5,7 +5,7 @@
 #include <string>
 
 #include <SDL2/SDL.h>
-#include <GL/glew.h>
+#include <SDL2/SDL_opengles2.h>
 
 const std::string programName = "SDL OpenGLES Shaders";
 
@@ -42,7 +42,6 @@ int main( int argc, char* args[] ) {
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
   SDL_GL_SetSwapInterval(1);
-  glewInit();
 
   // Do something
   glClearColor(0.2, 0.6, 0.2, 1.0);
