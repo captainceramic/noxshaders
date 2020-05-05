@@ -4,8 +4,6 @@
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>
 
-#include "bcm_host.h"
-
 #include "shader_loader.h"
 
 GLuint load_shaders(const char *vertex_shader_path,
