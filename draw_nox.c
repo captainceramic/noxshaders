@@ -20,7 +20,7 @@
 /* Set some parameters if necessary */
 const bool scale_down = true;
 const char* vert_shader_name = "./shaders/shader.vert";
-const char* frag_shader_name = "./shaders/shader.frag";
+const char* frag_shader_name = "./shaders/shader2.frag";
 const int num_seconds = 40;
 
 /* Struct to hold all the global state objects */
