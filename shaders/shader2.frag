@@ -18,7 +18,7 @@ float random (vec2 st, float time_point) {
   // sin of the dot product (radians)
   float sin_val = sin( seed_dot );
    
-  return fract( 100000.0 * time_point * sin( seed_dot ) );
+  return fract( 10000.0 * time_point * sin( seed_dot ) );
 }
 
 

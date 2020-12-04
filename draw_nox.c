@@ -14,8 +14,8 @@
 #include "shader_loader.h"
 
 
-#define SCREEN_X 800
-#define SCREEN_Y 800
+#define SCREEN_X 1920
+#define SCREEN_Y 1080
 
 /* Set some parameters if necessary */
 const bool scale_down = true;
